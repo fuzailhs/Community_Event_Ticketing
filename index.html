@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neighbourhood Tickets</title>
+    <meta
+      name="description"
+      content="Neighbourhood Tickets: community event registration, organizer dashboard, and check-in tools for a small free-event program."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <div class="brand-block" aria-label="Neighbourhood Tickets home">
+          <span class="brand-mark">NT</span>
+          <div>
+            <p class="eyebrow">Community Event Registration</p>
+            <h1>Neighbourhood Tickets</h1>
+          </div>
+        </div>
+        <nav aria-label="Main navigation" class="header-nav">
+          <button class="nav-button" data-route="#/">Public Event</button>
+          <button class="nav-button" data-route="#/login">Organizer Login</button>
+          <button class="nav-button" data-route="#/dashboard">Dashboard</button>
+          <button class="nav-button" data-route="#/checkin">Check-In</button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="app" class="container app-shell" aria-live="polite"></main>
+
+    <template id="public-event-template">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <p class="eyebrow accent">Free community event</p>
+          <h2 id="event-title">Neighbourhood Skills Night</h2>
+          <p id="event-summary"></p>
+          <ul class="meta-list" id="event-meta-list"></ul>
+        </div>
+        <div class="capacity-card" aria-live="polite">
+          <p class="status-label">Registration status</p>
+          <div id="capacity-status"></div>
+        </div>
+      </section>
+
+      <section class="two-column-layout">
+        <article class="panel">
+          <h3>Event details</h3>
+          <dl id="event-details" class="detail-list"></dl>
+        </article>
+
+        <article class="panel">
+          <h3>Reserve your place</h3>
+          <form id="registration-form" novalidate>
+            <div class="field-group">
+              <label for="attendee-name">Full name</label>
+              <input id="attendee-name" name="name" type="text" maxlength="80" required />
+            </div>
+
+            <div class="field-group">
+              <label for="attendee-email">Email address</label>
+              <input id="attendee-email" name="email" type="email" maxlength="120" required />
+            </div>
+
+            <div class="field-group">
+              <label for="ticket-quantity">Number of tickets</label>
+              <select id="ticket-quantity" name="quantity">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+
+            <div id="registration-message" class="message-box" aria-live="alert"></div>
+
+            <button type="submit" class="primary-button">Register for free</button>
+          </form>
+        </article>
+      </section>
+    </template>
+
+    <template id="login-template">
+      <section class="panel auth-panel">
+        <h2>Organizer sign in</h2>
+        <form id="login-form" novalidate>
+          <div class="field-group">
+            <label for="organizer-email">Email</label>
+            <input id="organizer-email" type="email" name="email" required />
+          </div>
+
+          <div class="field-group">
+            <label for="organizer-password">Password</label>
+            <input id="organizer-password" type="password" name="password" required />
+          </div>
+
+          <div id="login-message" class="message-box" aria-live="alert"></div>
+
+          <button type="submit" class="primary-button">Sign in</button>
+        </form>
+      </section>
+    </template>
+
+    <template id="dashboard-template">
+      <section class="dashboard-header">
+        <div>
+          <p class="eyebrow accent">Organizer workspace</p>
+          <h2>Event dashboard</h2>
+        </div>
+        <button id="logout-button" class="secondary-button" type="button">Sign out</button>
+      </section>
+
+      <section class="stats-grid" id="stats-grid" aria-live="polite"></section>
+
+      <section class="two-column-layout">
+        <article class="panel">
+          <h3>Create or edit event</h3>
+          <form id="event-form" novalidate>
+            <input type="hidden" id="event-id" name="id" />
+
+            <div class="field-group">
+              <label for="event-title-input">Title</label>
+              <input id="event-title-input" name="title" type="text" maxlength="120" required />
+            </div>
+
+            <div class="field-group">
+              <label for="event-summary-input">Summary</label>
+              <textarea id="event-summary-input" name="summary" rows="3" maxlength="280" required></textarea>
+            </div>
+
+            <div class="row-fields">
+              <div class="field-group">
+                <label for="event-starts-at">Starts at</label>
+                <input id="event-starts-at" name="starts_at" type="datetime-local" required />
+              </div>
+              <div class="field-group">
+                <label for="event-ends-at">Ends at</label>
+                <input id="event-ends-at" name="ends_at" type="datetime-local" required />
+              </div>
+            </div>
+
+            <div class="row-fields">
+              <div class="field-group">
+                <label for="event-venue">Venue</label>
+                <input id="event-venue" name="venue" type="text" maxlength="80" required />
+              </div>
+              <div class="field-group">
+                <label for="event-capacity">Capacity</label>
+                <input id="event-capacity" name="capacity" type="number" min="1" max="500" required />
+              </div>
+            </div>
+
+            <div class="row-fields">
+              <div class="field-group">
+                <label for="event-registration-deadline">Registration deadline</label>
+                <input id="event-registration-deadline" name="registration_deadline" type="datetime-local" required />
+              </div>
+              <div class="field-group">
+                <label for="event-contact-email">Contact email</label>
+                <input id="event-contact-email" name="contact_email" type="email" maxlength="120" required />
+              </div>
+            </div>
+
+            <div id="event-form-message" class="message-box" aria-live="alert"></div>
+
+            <div class="button-cluster">
+              <button type="submit" class="primary-button">Save draft</button>
+              <button type="button" id="reset-event-form" class="secondary-button">Reset</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel">
+          <h3>Published events</h3>
+          <div id="event-list" class="event-list"></div>
+        </article>
+      </section>
+    </template>
+
+    <template id="checkin-template">
+      <section class="panel checkin-panel">
+        <div class="dashboard-header">
+          <div>
+            <p class="eyebrow accent">Protected check-in</p>
+            <h2>Attendee search and check-in</h2>
+          </div>
+          <button id="checkin-logout-button" class="secondary-button" type="button">Sign out</button>
+        </div>
+
+        <div class="field-group">
+          <label for="checkin-query">Search by code, name, or email</label>
+          <input id="checkin-query" type="search" placeholder="Search this event" />
+        </div>
+
+        <div class="field-group">
+          <label for="checkin-event-select">Event</label>
+          <select id="checkin-event-select"></select>
+        </div>
+
+        <div id="checkin-message" class="message-box" aria-live="alert"></div>
+        <div id="checkin-results" class="checkin-results" aria-live="polite"></div>
+      </section>
+    </template>
+
+    <template id="confirmation-template">
+      <section class="panel confirmation-panel">
+        <p class="eyebrow accent">Registration confirmed</p>
+        <h2>Your ticket is reserved</h2>
+        <div id="confirmation-details"></div>
+        <div class="button-cluster">
+          <button class="primary-button" data-route="#/">Back to event</button>
+        </div>
+      </section>
+    </template>
+  </body>
+
+  <script src="app.js"></script>
+</html>
